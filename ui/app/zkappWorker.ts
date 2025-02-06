@@ -1,12 +1,12 @@
-import { Mina, PublicKey, fetchAccount } from 'o1js';
+import { Mina, PublicKey, fetchAccount, UInt64 } from 'o1js';
 import * as Comlink from "comlink";
-import type { Add } from '../../contracts/src/Add';
+import type { SendToUser } from '../../contracts/src/SendToUser';
 
 type Transaction = Awaited<ReturnType<typeof Mina.transaction>>;
 
 const state = {
-  AddInstance: null as null | typeof Add,
-  zkappInstance: null as null | Add,
+  AddInstance: null as null | typeof SendToUser,
+  zkappInstance: null as null | SendToUser,
   transaction: null as null | Transaction,
 };
 
@@ -17,8 +17,8 @@ export const api = {
     Mina.setActiveInstance(Network);
   },
   async loadContract() {
-    const { Add } = await import('../../contracts/build/src/Add.js');
-    state.AddInstance = Add;
+    const { SendToUser } = await import('../../contracts/build/src/SendToUser.js');
+    state.AddInstance = SendToUser;
   },
   async compileContract() {
     await state.AddInstance!.compile();
@@ -32,14 +32,23 @@ export const api = {
     state.zkappInstance = new state.AddInstance!(publicKey);
   },
   async getNum() {
-    const currentNum = await state.zkappInstance!.num.get();
-    return JSON.stringify(currentNum.toJSON());
+    // const currentNum = await state.zkappInstance!.num.get();
+    // return JSON.stringify(currentNum.toJSON());
   },
-  async createUpdateTransaction() {
-    state.transaction = await Mina.transaction(async () => {
-      await state.zkappInstance!.update();
+  async createUpdateTransaction(senderPublicKey58: string, receriverPublicKey58: string) {
+    const sender = PublicKey.fromBase58(senderPublicKey58);
+    const receiver = PublicKey.fromBase58(receriverPublicKey58);
+
+    // state.transaction = await Mina.transaction(async () => { // error
+    //   // await state.zkappInstance!.update();
+    //   await state.zkappInstance!.sendToUser(sender, receiver);
+    // });
+
+    state.transaction = await Mina.transaction(sender, async () => { // ok
+      // await state.zkappInstance!.update();
+      await state.zkappInstance!.sendToUser(sender, receiver);
     });
-  },
+  }, 
   async proveUpdateTransaction() {
     await state.transaction!.prove();
   },

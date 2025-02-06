@@ -7,7 +7,8 @@ import './reactCOIServiceWorker';
 import ZkappWorkerClient from './zkappWorkerClient';
 
 let transactionFee = 0.1;
-const ZKAPP_ADDRESS = 'B62qpXPvmKDf4SaFJynPsT6DyvuxMS9H1pT4TGonDT26m599m7dS9gP';
+const ZKAPP_ADDRESS = 'B62qmPj1miPyg9SPgUZjLgLMLnVj4SXKbLgs1cRNPW99UENuphB4zQP';  // 2025.02.06
+let existingAddressStr = 'B62qn7ovWWzfiFvcY6Y7iwu8Z7apb7LJdZCzKUrcqpfoSCvw68pCQa3';
 
 export default function Home() {
   const [zkappWorkerClient, setZkappWorkerClient] = useState<null | ZkappWorkerClient>(null);
@@ -68,9 +69,9 @@ export default function Home() {
 
           displayStep('Getting zkApp state...');
           await zkappWorkerClient.fetchAccount(ZKAPP_ADDRESS);
-          const currentNum = await zkappWorkerClient.getNum();
-          setCurrentNum(currentNum);
-          console.log(`Current state in zkApp: ${currentNum}`);
+          // const currentNum = await zkappWorkerClient.getNum();
+          // setCurrentNum(currentNum);
+          // console.log(`Current state in zkApp: ${currentNum}`);
 
           
           setHasBeenSetup(true);
@@ -124,7 +125,7 @@ export default function Home() {
     console.log('publicKeyBase58 sending to worker', publicKeyBase58);
     await zkappWorkerClient!.fetchAccount(publicKeyBase58);
 
-    await zkappWorkerClient!.createUpdateTransaction();
+    await zkappWorkerClient!.createUpdateTransaction(publicKeyBase58, existingAddressStr);
 
     displayStep('Creating proof...');
     await zkappWorkerClient!.proveUpdateTransaction();
@@ -153,12 +154,12 @@ export default function Home() {
 
   const onRefreshCurrentNum = async () => {
     try {
-      displayStep('Getting zkApp state...');
-      await zkappWorkerClient!.fetchAccount(ZKAPP_ADDRESS);
-      const currentNum = await zkappWorkerClient!.getNum();
-      setCurrentNum(currentNum);
-      console.log(`Current state in zkApp: ${currentNum}`);
-      setDisplayText('');
+      // displayStep('Getting zkApp state...');
+      // await zkappWorkerClient!.fetchAccount(ZKAPP_ADDRESS);
+      // const currentNum = await zkappWorkerClient!.getNum();
+      // setCurrentNum(currentNum);
+      // console.log(`Current state in zkApp: ${currentNum}`);
+      // setDisplayText('');
     } catch (error: any) {
       displayStep(`Error refreshing state: ${error.message}`);
     }

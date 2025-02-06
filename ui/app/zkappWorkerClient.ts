@@ -34,13 +34,13 @@ export default class ZkappWorkerClient {
     return this.remoteApi.initZkappInstance(publicKeyBase58);
   }
 
-  async getNum(): Promise<Field> {
-    const result = await this.remoteApi.getNum();
-    return Field.fromJSON(JSON.parse(result as string));
-  }
+  // async getNum(): Promise<Field> {
+  //   const result = await this.remoteApi.getNum();
+  //   return Field.fromJSON(JSON.parse(result as string));
+  // }
 
-  async createUpdateTransaction() {
-    return this.remoteApi.createUpdateTransaction();
+  async createUpdateTransaction(senderPublicKey58: string, receriverPublicKey58: string) {
+    return this.remoteApi.createUpdateTransaction(senderPublicKey58, receriverPublicKey58);
   }
 
   async proveUpdateTransaction() {

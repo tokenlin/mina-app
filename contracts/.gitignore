@@ -6,6 +6,10 @@ coverage
 # Editor
 .vscode
 
+*.env
+.env
+
+
 # System
 .DS_Store
 

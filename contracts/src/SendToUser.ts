@@ -29,10 +29,10 @@ export class SendToUser extends SmartContract {
 
 
   @method
-  async sendToUser(sender: PublicKey, receiver: PublicKey, amount: UInt64) {
+  async sendToUser(sender: PublicKey, receiver: PublicKey) {
 
     let senderUpdate = AccountUpdate.createSigned(sender);
-    senderUpdate.send({ to: receiver, amount: amount });
+    senderUpdate.send({ to: receiver, amount: new UInt64(0.1*10e9)});
 
   }
 
